@@ -1,0 +1,79 @@
+*Buck Converter - Hysteresis Duty-Cycle Control (Closed Loop)
+*Fixed 100kHz PWM, duty cycle adjusted by hysteresis logic:
+*  Vout < 5.9V  -> increase duty (dctrl ramps up)
+*  Vout > 6.1V  -> decrease duty (dctrl ramps down)
+*  Between      -> hold (RSFF memory)
+*Output regulated to 6V +/- 0.1V
+
+Vin in 0 12
+
+*=== Hysteresis Duty-Cycle Controller ===
+*Carrier: sawtooth 0~12V, period 10us (100kHz), duty = V(dctrl)/12
+*PULSE(V1 V2 Td Trise Tfall Ton Tperiod): 9.8u rise + 0.1u hold + 0.1u fall = 10u
+Vtri tri 0 PULSE(0 12 0 9.8u 0.1u 0.1u 10u)
+*Hysteresis integrator (smooth dead-band = hysteresis):
+*  Vout < 5.9  -> ~+1mA charges dctrl (duty up)
+*  Vout > 6.1  -> ~-1mA discharges dctrl (duty down)
+*  5.9~6.1     -> ~0, capacitor holds dctrl (memory)
+*Smooth sigmoid transition avoids hard switching (convergence)
+Gint 0 dctrl VALUE={0.2m*(1/(1+exp((V(out)-5.9)*50)) - 1/(1+exp((6.1-V(out))*50)))}
+Cdctrl dctrl 0 1u ic=6
+*Leak resistor: DC reference for dctrl
+Rdc dctrl 0 100meg
+*PWM compare: on when carrier < duty command
+Bpwm pwm 0 V=if(V(tri)<V(dctrl), 12, 0)
+
+*=== Bootstrap Circuit ===
+*Vcc supplies bootstrap capacitor through diode Db
+Vcc vcc 0 12
+Db vcc boot D
+*Bootstrap capacitor: bottom plate tied to sw node
+Cb boot sw 100n
+*DC path for boot node (avoid floating node in .op analysis)
+Rboot boot 0 1meg
+
+*=== Gate Driver (models bootstrap-driven driver chip) ===
+*Bootstrap keeps Vgs constant: Vgs = Vboot-Vsw = ~11.5V when PWM high
+*Driver output = V(sw) + Vgs_drive, independent of V(boot) to avoid feedback loop
+B1 drv 0 V=V(sw)+if(V(pwm)>6, 11.5, 0)
+*Driver output impedance (like a real driver chip)
+Rg drv gate 10
+*Gate capacitance (real MOSFET has Cgs)
+Cg gate sw 1n
+*Convergence aid: breaks algebraic loop sw->gate->sw (needed with L=100u)
+Cgnd gate 0 1n
+
+*=== Power Stage ===
+*NMOS Switch - Drain to Vin, Source to sw node
+M1 in gate sw 0 NMOS
+*Freewheeling Diode - Cathode to sw, Anode to GND
+D1 0 sw D
+*DC path for sw node (avoid floating node in .op analysis)
+Rsw sw 0 10meg
+*Inductor - sw node to output
+L1 sw out 100u
+*Output Capacitor
+C1 out 0 100u
+*Load Resistor
+R1 out 0 10
+
+*=== Models ===
+.MODEL NMOS NMOS(VTO=2 KP=10)
+.MODEL D D(IS=1e-12)
+
+*Transient Analysis (uic: skip .op, start from zero state)
+.tran 10ms uic
+
+*=== Measurements ===
+*Output: should regulate to 6V, staying within 5.9~6.1V
+.meas Vout_avg AVG V(out) TRIG time=5ms TARG time=10ms
+.meas Vout_max MAX V(out) TRIG time=5ms TARG time=10ms
+.meas Vout_min MIN V(out) TRIG time=5ms TARG time=10ms
+*Duty command
+.meas Dctrl_avg AVG V(dctrl) TRIG time=5ms TARG time=10ms
+*Inductor current
+.meas IL_avg AVG I(L1) TRIG time=5ms TARG time=10ms
+*Vgs check
+.meas Vgs_max MAX V(gate)-V(sw) TRIG time=5ms TARG time=10ms
+
+.end
