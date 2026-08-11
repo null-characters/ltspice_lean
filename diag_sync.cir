@@ -1,0 +1,31 @@
+*Buck Converter - Synchronous Rectifier (Fully Ideal)
+*Two ideal switches, complementary PWM
+*Verify Vout = Vin*D exactly
+
+*=== Circuit ===
+Vin in 0 12
+Vgate gate 0 PULSE(0 12 0 10n 10n 5u 10u)
+Vgate2 gate2 0 PULSE(0 12 5u 10n 10n 5u 10u)
+*Ideal high-side switch
+S1 in sw gate 0 SW1
+*Ideal low-side switch (synchronous rectifier, replaces diode)
+S2 0 sw gate2 0 SW1
+L1 sw out 10u
+C1 out 0 100u
+R1 out 0 1
+
+*=== Models ===
+.MODEL SW1 SW(Ron=1m Roff=1meg Vt=0.5)
+
+*=== Transient Analysis ===
+.tran 10ms
+
+*=== Measurements ===
+.meas Vout_avg AVG V(out) TRIG time=5ms TARG time=10ms
+.meas Vin_avg AVG V(in) TRIG time=5ms TARG time=10ms
+.meas Vsw_avg AVG V(sw) TRIG time=5ms TARG time=10ms
+.meas Vsw_max MAX V(sw) TRIG time=5ms TARG time=10ms
+.meas Vsw_min MIN V(sw) TRIG time=5ms TARG time=10ms
+.meas IL_avg AVG I(L1) TRIG time=5ms TARG time=10ms
+
+.end

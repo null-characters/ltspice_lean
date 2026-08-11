@@ -1,0 +1,69 @@
+*Buck Converter - Netlist Format with Bootstrap Driver
+*Standard Buck Circuit Topology + Bootstrap for High-Side NMOS
+
+Vin in 0 12
+
+*=== PWM Drive ===
+Vpwm pwm 0 PULSE(0 12 0 10n 10n 5u 10u)
+
+*=== Bootstrap Circuit ===
+*Vcc supplies bootstrap capacitor through diode Db
+Vcc vcc 0 12
+Db vcc boot D
+*Bootstrap capacitor: bottom plate tied to sw node
+Cb boot sw 100n
+*DC path for boot node (avoid floating node in .op analysis)
+Rboot boot 0 1meg
+
+*=== Gate Driver (models bootstrap-driven driver chip) ===
+*Bootstrap keeps Vgs constant: Vgs = Vboot-Vsw = ~11.5V when PWM high
+*Driver output = V(sw) + Vgs_drive, independent of V(boot) to avoid feedback loop
+B1 drv 0 V=V(sw)+if(V(pwm)>6, 11.5, 0)
+*Driver output impedance (like a real driver chip)
+Rg drv gate 10
+*Gate capacitance (real MOSFET has Cgs)
+Cg gate sw 1n
+
+*=== Power Stage ===
+*NMOS Switch - Drain to Vin, Source to sw node
+M1 in gate sw 0 NMOS
+*Freewheeling Diode - Cathode to sw, Anode to GND
+D1 0 sw D
+*DC path for sw node (avoid floating node in .op analysis)
+Rsw sw 0 10meg
+*Inductor - sw node to output
+L1 sw out 10u
+*Output Capacitor
+C1 out 0 100u
+*Load Resistor
+R1 out 0 10
+
+*=== Models ===
+.MODEL NMOS NMOS(VTO=2 KP=10)
+.MODEL D D(IS=1e-12)
+*.MODEL SW1 SW(Ron=1m Roff=1meg Vt=0.5)
+
+*Transient Analysis
+.tran 10ms
+
+*=== Diagnosis Measurements ===
+*Output voltage (steady state average)
+.meas Vout_avg AVG V(out) TRIG time=5ms TARG time=10ms
+*Input voltage
+.meas Vin_avg AVG V(in) TRIG time=5ms TARG time=10ms
+*Switch node: max = MOSFET on, min = diode conducting
+.meas Vsw_max MAX V(sw) TRIG time=5ms TARG time=10ms
+.meas Vsw_min MIN V(sw) TRIG time=5ms TARG time=10ms
+*Gate-Source drive voltage of high-side NMOS
+.meas Vgs_max MAX V(gate)-V(sw) TRIG time=5ms TARG time=10ms
+*Bootstrap voltage (boot node, should reach ~23V when high-side on)
+.meas Vboot_max MAX V(boot) TRIG time=5ms TARG time=10ms
+*Bootstrap voltage minimum (in CCM should return to ~12V, in DCM stays high)
+.meas Vboot_min MIN V(boot) TRIG time=5ms TARG time=10ms
+*Inductor current mode (CCM if IL_min > 0)
+.meas IL_min MIN I(L1) TRIG time=5ms TARG time=10ms
+.meas IL_max MAX I(L1) TRIG time=5ms TARG time=10ms
+*Average diode current
+.meas ID1_avg AVG I(D1) TRIG time=5ms TARG time=10ms
+
+.end

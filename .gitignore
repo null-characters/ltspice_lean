@@ -1,0 +1,8 @@
+# LTspice 仿真生成文件（每次运行都会重新生成，不纳入版本库）
+*.raw
+*.op.raw
+*.log
+*.net
+
+# Reasonix 工具内部状态
+.reasonix/

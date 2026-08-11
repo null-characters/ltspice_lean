@@ -1,0 +1,28 @@
+*Buck Converter - Ideal Switch Test
+*Verify Vout = Vin*D with ideal components
+
+*=== Circuit ===
+Vin in 0 12
+Vgate gate 0 PULSE(0 12 0 10n 10n 5u 10u)
+*Ideal switch: SW1 (closes when gate>0.5)
+S1 in sw gate 0 SW1
+D1 0 sw D
+L1 sw out 10u
+C1 out 0 100u
+R1 out 0 1
+
+*=== Models ===
+.MODEL SW1 SW(Ron=1m Roff=1meg Vt=0.5)
+.MODEL D D(IS=1e-15 N=1.0)
+
+*=== Transient Analysis ===
+.tran 10ms
+
+*=== Measurements ===
+.meas Vout_avg AVG V(out) TRIG time=5ms TARG time=10ms
+.meas Vin_avg AVG V(in) TRIG time=5ms TARG time=10ms
+.meas Vsw_avg AVG V(sw) TRIG time=5ms TARG time=10ms
+.meas Vsw_max MAX V(sw) TRIG time=5ms TARG time=10ms
+.meas IL_avg AVG I(L1) TRIG time=5ms TARG time=10ms
+
+.end
