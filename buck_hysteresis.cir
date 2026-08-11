@@ -94,5 +94,8 @@ R1 out 0 10
 .meas Vout_max MAX V(out) TRIG time=18ms TARG time=25ms
 *IL after step
 .meas IL_after AVG I(L1) TRIG time=18ms TARG time=25ms
+*Mode check: IL_min > 0 -> CCM, IL_min ~ 0 -> DCM
+.meas IL_min_after MIN I(L1) TRIG time=18ms TARG time=25ms
+.meas IL_max_after MAX I(L1) TRIG time=18ms TARG time=25ms
 
 .end
