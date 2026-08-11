@@ -73,7 +73,13 @@ R1 out 0 10
 *Before ref step (2~9.9ms): Vref=6V
 .meas Vout_before AVG V(out) TRIG time=2ms TARG time=9.9ms
 .meas Dctrl_before AVG V(dctrl) TRIG time=2ms TARG time=9.9ms
-*After ref step (15~25ms): Vref=8V
+*Duty ramp after ref step (10ms Vref 6->8V): track dctrl over time
+.meas Dctrl_t1 AVG V(dctrl) TRIG time=11ms TARG time=12ms
+.meas Dctrl_t2 AVG V(dctrl) TRIG time=13ms TARG time=14ms
+.meas Dctrl_t3 AVG V(dctrl) TRIG time=15ms TARG time=16ms
+.meas Dctrl_t4 AVG V(dctrl) TRIG time=17ms TARG time=18ms
+.meas Dctrl_t5 AVG V(dctrl) TRIG time=19ms TARG time=20ms
+*After ref step (18~25ms): Vref=8V
 .meas Vout_after AVG V(out) TRIG time=18ms TARG time=25ms
 .meas Dctrl_after AVG V(dctrl) TRIG time=18ms TARG time=25ms
 .meas Vout_min MIN V(out) TRIG time=18ms TARG time=25ms
