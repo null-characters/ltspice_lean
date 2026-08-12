@@ -9,3 +9,6 @@
 
 # matplotlib 生成的图
 *.png
+
+# 编译产物
+*.exe
