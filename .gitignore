@@ -6,3 +6,6 @@
 
 # Reasonix 工具内部状态
 .reasonix/
+
+# matplotlib 生成的图
+*.png
