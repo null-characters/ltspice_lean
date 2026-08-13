@@ -1,0 +1,95 @@
+*Buck Converter - PI Duty-Cycle Control (Closed Loop)
+*50kHz PWM, duty = Kp*e + Ki*integral(e), e = Vref - Vout
+*Vref steps 6V->8V at 10ms. Clamp duty 0~100%.
+
+Vin in 0 12
+
+*=== PI Duty-Cycle Controller (series: integral + proportional) ===
+*Carrier: sawtooth 0~12V, period 20us (50kHz), duty = V(dctrl)/12
+*PULSE(V1 V2 Td Trise Tfall Ton Tperiod): 19.6u rise + 0.2u hold + 0.2u fall = 20u
+Vtri tri 0 PULSE(0 12 0 19.6u 0.2u 0.2u 20u)
+*Reference: 6V, ramps to 8V over 0.1ms starting at 10ms, then holds
+Bref ref 0 V=6+2*limit((time-10m)/0.1m,0,1)
+*Error: e = Vref - Vout
+Berr err 0 V=V(ref)-V(out)
+*Integral term: limited current source charges Ci (200V/s when saturated)
+*  tanh soft-limits current to +/-0.2mA (like hysteresis version, no dead band)
+Gi 0 int VALUE={0.2m*tanh(V(err)/0.05)}
+Ci int 0 1u ic=6
+*Proportional term: tanh soft-limited voltage source in series
+*  Bp voltage = 5*tanh(e/1), saturates to +/-5V (no hard clamp)
+Bp dctrl int V=5*tanh(V(err)/1)
+*PWM compare: on when carrier < duty command (dctrl = integral + proportional)
+Bpwm pwm 0 V=if(V(tri)<V(dctrl), 12, 0)
+
+*=== Bootstrap Circuit ===
+*Vcc supplies bootstrap capacitor through diode Db
+Vcc vcc 0 12
+Db vcc boot D
+*Bootstrap capacitor: bottom plate tied to sw node
+Cb boot sw 100n
+*DC path for boot node (avoid floating node in .op analysis)
+Rboot boot 0 1meg
+
+*=== Gate Driver (models bootstrap-driven driver chip) ===
+*Bootstrap keeps Vgs constant: Vgs = Vboot-Vsw = ~11.5V when PWM high
+*Driver output = V(sw) + Vgs_drive, independent of V(boot) to avoid feedback loop
+B1 drv 0 V=V(sw)+if(V(pwm)>6, 11.5, 0)
+*Driver output impedance (like a real driver chip)
+Rg drv gate 10
+*Gate capacitance (real MOSFET has Cgs)
+Cg gate sw 1n
+*Convergence aid: breaks algebraic loop sw->gate->sw (needed with L=100u)
+Cgnd gate 0 1n
+
+*=== Power Stage ===
+*NMOS Switch - Drain to Vin, Source to sw node
+M1 in gate sw 0 NMOS
+*Freewheeling Diode - Cathode to sw, Anode to GND
+D1 0 sw D
+*DC path for sw node (avoid floating node in .op analysis)
+Rsw sw 0 10meg
+*Inductor - sw node to output
+L1 sw out 100u
+*Output Capacitor
+C1 out 0 100u
+*Load Resistor
+R1 out 0 10
+
+*=== Models ===
+.MODEL NMOS NMOS(VTO=2 KP=10)
+.MODEL D D(IS=1e-12)
+
+*Transient Analysis (uic: skip .op, start from zero state)
+.tran 25ms uic
+
+*=== Measurements ===
+*Before ref step (2~9.9ms): Vref=6V
+.meas Vout_before AVG V(out) TRIG time=2ms TARG time=9.9ms
+.meas Dctrl_before AVG V(dctrl) TRIG time=2ms TARG time=9.9ms
+.meas Duty_before AVG V(dctrl)*100/12 TRIG time=2ms TARG time=9.9ms
+*Duty ramp after ref step (10ms Vref 6->8V): track dctrl over time
+*Duty cycle = V(dctrl)/12 * 100%
+.meas Dctrl_t1 AVG V(dctrl) TRIG time=11ms TARG time=12ms
+.meas Duty_t1 AVG V(dctrl)*100/12 TRIG time=11ms TARG time=12ms
+.meas Dctrl_t2 AVG V(dctrl) TRIG time=13ms TARG time=14ms
+.meas Duty_t2 AVG V(dctrl)*100/12 TRIG time=13ms TARG time=14ms
+.meas Dctrl_t3 AVG V(dctrl) TRIG time=15ms TARG time=16ms
+.meas Duty_t3 AVG V(dctrl)*100/12 TRIG time=15ms TARG time=16ms
+.meas Dctrl_t4 AVG V(dctrl) TRIG time=17ms TARG time=18ms
+.meas Duty_t4 AVG V(dctrl)*100/12 TRIG time=17ms TARG time=18ms
+.meas Dctrl_t5 AVG V(dctrl) TRIG time=19ms TARG time=20ms
+.meas Duty_t5 AVG V(dctrl)*100/12 TRIG time=19ms TARG time=20ms
+*After ref step (18~25ms): Vref=8V
+.meas Vout_after AVG V(out) TRIG time=18ms TARG time=25ms
+.meas Dctrl_after AVG V(dctrl) TRIG time=18ms TARG time=25ms
+.meas Duty_after AVG V(dctrl)*100/12 TRIG time=18ms TARG time=25ms
+.meas Vout_min MIN V(out) TRIG time=18ms TARG time=25ms
+.meas Vout_max MAX V(out) TRIG time=18ms TARG time=25ms
+*IL after step
+.meas IL_after AVG I(L1) TRIG time=18ms TARG time=25ms
+*Mode check: IL_min > 0 -> CCM, IL_min ~ 0 -> DCM
+.meas IL_min_after MIN I(L1) TRIG time=18ms TARG time=25ms
+.meas IL_max_after MAX I(L1) TRIG time=18ms TARG time=25ms
+
+.end
