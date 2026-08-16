@@ -1,6 +1,11 @@
 *Buck Converter - PI Duty-Cycle Control (Closed Loop)
 *50kHz PWM, duty = Kp*e + Ki*integral(e), e = Vref - Vout
 *Vref steps 6V->8V at 10ms. Clamp duty 0~100%.
+*Design values (L=100uH, fc=f0/5=318Hz): Kp=0.96, Ki=190
+
+*Design parameters
+.param Kp=3
+.param Ki=6000
 
 Vin in 0 12
 
@@ -12,13 +17,14 @@ Vtri tri 0 PULSE(0 12 0 19.6u 0.2u 0.2u 20u)
 Bref ref 0 V=6+2*limit((time-10m)/0.1m,0,1)
 *Error: e = Vref - Vout
 Berr err 0 V=V(ref)-V(out)
-*Integral term: limited current source charges Ci (200V/s when saturated)
-*  tanh soft-limits current to +/-0.2mA (like hysteresis version, no dead band)
-Gi 0 int VALUE={0.2m*tanh(V(err)/0.05)}
+*Integral term: Ki-matched current source charges Ci
+*  tanh soft-limits; linear slope = Ki*Ci = 190*1u = 0.19m A/V
+*  -> dv/dt = Ki*err = 190*err V/s (matches design Ki=190)
+Gi 0 int VALUE={Ki*1u*tanh(V(err)/1)}
 Ci int 0 1u ic=6
 *Proportional term: tanh soft-limited voltage source in series
-*  Bp voltage = 5*tanh(e/1), saturates to +/-5V (no hard clamp)
-Bp dctrl int V=5*tanh(V(err)/1)
+*  Bp voltage = Kp*tanh(e/1), linear slope = Kp = 0.96 (matches design Kp)
+Bp dctrl int V=Kp*tanh(V(err)/1)
 *PWM compare: on when carrier < duty command (dctrl = integral + proportional)
 Bpwm pwm 0 V=if(V(tri)<V(dctrl), 12, 0)
 
@@ -61,7 +67,7 @@ R1 out 0 10
 .MODEL D D(IS=1e-12)
 
 *Transient Analysis (uic: skip .op, start from zero state)
-.tran 25ms uic
+.tran 25s uic
 
 *=== Measurements ===
 *Before ref step (2~9.9ms): Vref=6V

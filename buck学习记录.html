@@ -1,0 +1,1818 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>buck学习记录.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> or <div class="page"></div> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="buck-降压电路学习记录">Buck 降压电路学习记录</h1>
+<blockquote>
+<p>网表搭建 → 仿真验证 → 排查&quot;输出电压 ≠ 理论值&quot; → 自举驱动</p>
+</blockquote>
+<hr>
+<h2 id="1-buck-电路基础">1. Buck 电路基础</h2>
+<h3 id="拓扑与原理">拓扑与原理</h3>
+<pre class="hljs"><code><div>Vin(12V) ──┬── M1(NMOS) ── L1 ──┬── C1 ──┬── Vout
+           │                    │        │
+           └──── D1 ────────────┘        R1
+                                        GND
+</div></code></pre>
+<ul>
+<li><strong>M1 导通</strong>：Vin → M1 → L1 → 负载，电感储能</li>
+<li><strong>M1 关断</strong>：L1 通过 D1 续流 → 负载</li>
+<li><strong>理想公式</strong>：<code>Vout = Vin × D</code>，50% 占空比 → 6V</li>
+</ul>
+<h3 id="元件表">元件表</h3>
+<table>
+<thead>
+<tr>
+<th>元件</th>
+<th>值</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Vin</td>
+<td>12V</td>
+<td>输入电源</td>
+</tr>
+<tr>
+<td>Vgate</td>
+<td>PWM 0/12V, 5µs/10µs</td>
+<td>开关控制（占空比50%）</td>
+</tr>
+<tr>
+<td>M1</td>
+<td>NMOS (VTO=2)</td>
+<td>高边开关管</td>
+</tr>
+<tr>
+<td>D1</td>
+<td>二极管</td>
+<td>续流</td>
+</tr>
+<tr>
+<td>L1</td>
+<td>10µH</td>
+<td>储能</td>
+</tr>
+<tr>
+<td>C1</td>
+<td>100µF</td>
+<td>滤波</td>
+</tr>
+<tr>
+<td>R1</td>
+<td>10Ω</td>
+<td>负载</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="2-网表要点">2. 网表要点</h2>
+<pre class="hljs"><code><div>Vin in 0 12
+Vgate gate 0 PULSE(0 12 0 10n 10n 5u 10u)
+M1 in gate sw 0 NMOS
+D1 0 sw D
+L1 sw out 10u
+C1 out 0 100u
+R1 out 0 10
+.MODEL NMOS NMOS(VTO=2 KP=10)
+.MODEL D D(IS=1e-12)
+.tran 10ms
+.meas Vout_avg AVG V(out) TRIG time=5ms TARG time=10ms
+.end
+</div></code></pre>
+<ul>
+<li>命令行仿真：<code>LTspice.exe -b -Run buck.cir</code></li>
+<li>输出：<code>buck.log</code>（测量结果）、<code>buck.raw</code>（波形）</li>
+</ul>
+<hr>
+<h2 id="3-常见问题速查">3. 常见问题速查</h2>
+<table>
+<thead>
+<tr>
+<th>问题</th>
+<th>原因</th>
+<th>解决</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>中文注释乱码</td>
+<td>UTF-8 vs ANSI 编码</td>
+<td>注释用英文</td>
+</tr>
+<tr>
+<td><code>10µ</code> 乱码</td>
+<td>µ 编码问题</td>
+<td>写 <code>10u</code></td>
+</tr>
+<tr>
+<td>.meas FAIL'ed</td>
+<td>节点名不匹配（VOUT vs out）</td>
+<td>统一 FLAG 与测量节点名</td>
+</tr>
+<tr>
+<td>.asc 报 MODEL 语法错</td>
+<td>模型需写为 TEXT 指令</td>
+<td><code>TEXT ... !.MODEL ...</code></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="4-核心问题vout--vind实测-6276v理论-6v">4. 核心问题：Vout ≠ Vin×D（实测 6.276V，理论 6V）</h2>
+<h3 id="三大偏差来源">三大偏差来源</h3>
+<table>
+<thead>
+<tr>
+<th>来源</th>
+<th>方向</th>
+<th>原因</th>
+<th>判断依据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>DCM 断续模式</strong></td>
+<td>偏高</td>
+<td>纹波(3A) &gt;&gt; 负载电流(0.6A)，电流降到0</td>
+<td>IL_min ≈ 0</td>
+</tr>
+<tr>
+<td><strong>高边 NMOS Vgs 不足</strong></td>
+<td>偏低</td>
+<td>Vgs=Vgate-Vsw 被压缩到 2.58V（阈值2V）</td>
+<td>Vsw_max=10V≠12V</td>
+</tr>
+<tr>
+<td><strong>二极管压降</strong></td>
+<td>偏低</td>
+<td>Vd≈0.7V，损失 Vd×(1-D)=0.35V</td>
+<td>Vsw_min=-0.73V</td>
+</tr>
+</tbody>
+</table>
+<h3 id="dcm-伏秒平衡为什么-vout-反而更高">DCM 伏秒平衡：为什么 Vout 反而更高？</h3>
+<p><strong>电感稳态条件：</strong> 一个周期内&quot;充电伏秒 = 放电伏秒&quot;。</p>
+<p><strong>CCM（续流占满整个关断期，δ = 1-D）：</strong></p>
+<pre class="hljs"><code><div>(Vin-Vout)×D = Vout×(1-D)
+⇒ Vout = Vin×D = 6V
+</div></code></pre>
+<p><strong>DCM（续流只占 δ，δ &lt; 1-D，存在空闲期）：</strong></p>
+<pre class="hljs"><code><div>(Vin-Vout)×D = Vout×δ
+⇒ Vout = Vin×D/(D+δ) &gt; Vin×D
+</div></code></pre>
+<p>推导：</p>
+<pre class="hljs"><code><div>(Vin-Vout)×D &lt; Vout×(1-D)
+⇒ Vin×D - Vout×D &lt; Vout - Vout×D
+⇒ Vin×D &lt; Vout
+⇒ Vout &gt; Vin×D
+</div></code></pre>
+<p><strong>直觉理解（水泵/蓄水池比喻）：</strong></p>
+<ul>
+<li>导通期储能固定：只由 Vin、Vout、D 决定</li>
+<li>DCM 里电感<strong>提前放空</strong>，续流时间 δ 缩短</li>
+<li>稳态要求&quot;存多少 = 放多少&quot;，放水时间变短 → <strong>必须抬高 Vout 才能平衡</strong></li>
+</ul>
+<p><strong>实测数据验证（DCM：Vout=7.83V）：</strong></p>
+<pre class="hljs"><code><div>δ = (Vin-Vout)×D / Vout = (12-7.83)×0.5 / 7.83 = 0.266
+</div></code></pre>
+<ul>
+<li>续流只占 26.6%（关断期 50% 里一半多时间是空的）</li>
+<li>空闲期 = 50% - 26.6% = 23.4%，全靠 C1 放电维持负载</li>
+</ul>
+<blockquote>
+<p>一句话：<strong>DCM 输出更高不是&quot;电感给了更多&quot;，而是&quot;电感提前下班&quot;（空闲期）稀释了能量传递，伏秒平衡迫使 Vout 抬高补偿。</strong></p>
+</blockquote>
+<h3 id="精确公式">精确公式</h3>
+<pre class="hljs"><code><div>Vout = Vin×D - Vd×(1-D) - I×Ron
+</div></code></pre>
+<hr>
+<h2 id="5-自举电路解决高边-nmos-驱动不足">5. 自举电路（解决高边 NMOS 驱动不足）</h2>
+<h3 id="原理">原理</h3>
+<p>自举电容 Cb 在 M1 关断时（sw≈0V）通过 Db 充电至 ~12V；
+M1 导通时 sw 上升，Cb 下端被抬高，boot = sw+12V，Vgs 恒定。</p>
+<h3 id="网表实现">网表实现</h3>
+<pre class="hljs"><code><div>Vcc vcc 0 12
+Db vcc boot D          ; 自举二极管
+Cb boot sw 100n        ; 自举电容（下端接 sw）
+Rboot boot 0 1meg      ; boot 直流路径（防 .op 悬空）
+* 驱动芯片模型：Vgs = 11.5V (PWM高) / 0V (PWM低)
+B1 drv 0 V=V(sw)+if(V(pwm)&gt;6, 11.5, 0)
+Rg drv gate 10         ; 驱动输出阻抗
+Cg gate sw 1n          ; 栅极电容
+</div></code></pre>
+<h3 id="验证结果对比">验证结果（对比）</h3>
+<table>
+<thead>
+<tr>
+<th>测量项</th>
+<th>无自举</th>
+<th>有自举</th>
+<th>结论</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Vgs_max</td>
+<td>2.58V</td>
+<td><strong>11.5V 恒定</strong></td>
+<td>✓ 驱动不足解决</td>
+</tr>
+<tr>
+<td>Vboot_max</td>
+<td>-</td>
+<td><strong>26.6V</strong></td>
+<td>✓ 举升正常</td>
+</tr>
+<tr>
+<td>Vsw_max</td>
+<td>10.0V</td>
+<td>14.4V</td>
+<td>MOS 充分导通</td>
+</tr>
+<tr>
+<td>Vout_avg</td>
+<td>6.28V</td>
+<td>7.83V</td>
+<td>仍偏高（DCM 遗留）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="实现经验仿真收敛坑">实现经验（仿真收敛坑）</h3>
+<ol>
+<li><strong>自举电容使 boot 节点悬空</strong> → 加 <code>Rboot</code> 直流路径</li>
+<li><strong>理想开关/受控源直接驱动 gate 导致收敛失败</strong>（Singular matrix / Heightened Def Con）
+<ul>
+<li>改用 B 源 + 输出电阻 Rg + 栅极电容 Cg</li>
+<li>驱动器表达式只依赖 <code>V(sw)</code>，不依赖 <code>V(boot)</code>，打破反馈环</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="6-dcm-vs-ccm-对比实验">6. DCM vs CCM 对比实验</h2>
+<h3 id="背景boot-电压异常现象">背景：boot 电压异常现象</h3>
+<p><strong>现象：</strong> 观察 boot 节点波形，PWM 低电平期间 boot 没有回到 12V，而是停在 ~20V。</p>
+<p><strong>原因：</strong> <code>V(boot) = V(sw) + V(Cb)</code>，DCM 模式下 M1 关断期分两段：</p>
+<table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>sw 电压</th>
+<th>boot 电压</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>① 续流期（D1 导通）</td>
+<td>≈ -0.7V</td>
+<td>被 Db 拉回 ~11V</td>
+</tr>
+<tr>
+<td>② <strong>空闲期（电流=0）</strong></td>
+<td><strong>≈ Vout</strong></td>
+<td><strong>Vout + Vcb ≈ 20V</strong> ✓</td>
+</tr>
+</tbody>
+</table>
+<p>电感电流降到 0 后 D1 截止、sw 不再被钳位到地，而是等于 Vout；
+Cb 已充满且无放电通路 → boot = Vout + Vcb ≈ 20V。<strong>这是 DCM 的正常特征。</strong></p>
+<h3 id="实验改电感进入-ccm">实验：改电感进入 CCM</h3>
+<p>仅将 <code>L1 10u → 100u</code>（文件 <code>buck_ccm.cir</code>，其余与 <code>buck.cir</code> 完全一致）。</p>
+<h3 id="结果对比自举驱动电路">结果对比（自举驱动电路）</h3>
+<table>
+<thead>
+<tr>
+<th>测量项</th>
+<th>DCM (L=10µ)</th>
+<th>CCM (L=100µ)</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IL_min</td>
+<td>≈0</td>
+<td><strong>0.40A &gt; 0</strong></td>
+<td>✓ 确认 CCM</td>
+</tr>
+<tr>
+<td>Vout_avg</td>
+<td>7.83V</td>
+<td><strong>5.72V</strong></td>
+<td>CCM 更接近理论6V</td>
+</tr>
+<tr>
+<td>Vsw_max</td>
+<td>14.4V</td>
+<td>12.0V</td>
+<td>MOS 充分导通</td>
+</tr>
+<tr>
+<td>Vsw_min</td>
+<td>-0.74V</td>
+<td>-0.71V</td>
+<td>续流压降</td>
+</tr>
+<tr>
+<td>Vgs_max</td>
+<td>11.5V</td>
+<td>11.5V</td>
+<td>自举正常</td>
+</tr>
+<tr>
+<td>Vboot_max</td>
+<td>26.6V</td>
+<td>24.3V</td>
+<td>举升正常</td>
+</tr>
+<tr>
+<td><strong>Vboot_min</strong></td>
+<td>11.5V</td>
+<td>11.5V</td>
+<td>见下</td>
+</tr>
+</tbody>
+</table>
+<h3 id="boot-低电平的-dcmccm-对比">boot 低电平的 DCM/CCM 对比</h3>
+<table>
+<thead>
+<tr>
+<th>模式</th>
+<th>M1 关断期间 sw 状态</th>
+<th>boot 低电平</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DCM</td>
+<td>续流期 -0.7V → <strong>空闲期 =Vout(7.8V)</strong></td>
+<td>大部分时间 ≈ <strong>20V</strong></td>
+</tr>
+<tr>
+<td>CCM</td>
+<td>续流期全程 -0.7V（电流不断）</td>
+<td>全程被 Db 拉回 ≈ <strong>11.5V</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>结论：</strong> boot 低电平是否回到 12V 附近，可用于快速判断工作模式。</p>
+<h3 id="ccm-收敛坑代数环-singular-matrix">CCM 收敛坑：代数环 Singular matrix</h3>
+<p><strong>现象：</strong> 只改 L=100µ 后仿真报 <code>Singular matrix: check node gate</code>。</p>
+<p><strong>原因：</strong> 大电感使开关切换更硬（电流不为 0），驱动表达式
+<code>B1: drv = V(sw)+11.5</code> 与 <code>M1: sw = f(Vgs)</code> 形成<strong>代数环</strong>，
+环路增益过高 → 矩阵奇异。</p>
+<p><strong>解决：</strong> 加 <code>Cgnd gate 0 1n</code>（gate 对地电容），打断瞬时代数环。
+1nF 相对主电路（µH/µF 级）影响可忽略，不改变电路行为。</p>
+<p><strong>经验：</strong> 对比实验应保持两文件<strong>仅一处功能差异</strong>（此例只有 L1），
+其余注释/结构完全一致，diff 一目了然。</p>
+<hr>
+<h2 id="7-波形与电流解读">7. 波形与电流解读</h2>
+<h3 id="71-vdrv-为什么是--068v--233v">7.1 v(drv) 为什么是 -0.68V ~ 23.3V？</h3>
+<p>驱动表达式：<code>V(drv) = V(sw) + if(V(pwm)&gt;6, 11.5, 0)</code></p>
+<table>
+<thead>
+<tr>
+<th>PWM 状态</th>
+<th>sw 电压</th>
+<th>V(drv)</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>高电平（M1导通）</td>
+<td>≈12V</td>
+<td><strong>23.3V</strong></td>
+<td>12 + 11.5（自举叠加）</td>
+</tr>
+<tr>
+<td>低电平（M1关断,D1续流）</td>
+<td>≈<strong>-0.7V</strong></td>
+<td><strong>-0.68V</strong></td>
+<td>D1 钳位</td>
+</tr>
+</tbody>
+</table>
+<p><strong>负值来源：</strong> 续流二极管正向压降。D1 阳极接地、阴极接 sw，
+导通时 <code>0 - V(sw) = 0.7V</code> → <strong>sw 被钳位到 -0.7V</strong>，drv 跟随。</p>
+<p><strong>关键：</strong> 驱动看 Vgs = V(gate)-V(sw) = 11.5V/0V 恒定，
+drv 绝对电压随 sw 浮动是设计使然，非故障。</p>
+<h3 id="72-各节点电流含义">7.2 各节点电流含义</h3>
+<p><strong>主功率路径：</strong></p>
+<table>
+<thead>
+<tr>
+<th>电流</th>
+<th>位置</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>i(L1)</td>
+<td>电感</td>
+<td><strong>核心</strong>：负载电流+纹波，锯齿波；判断 DCM/CCM</td>
+</tr>
+<tr>
+<td>i(R1)</td>
+<td>负载</td>
+<td>输出电流 = Vout/R1，近似直流</td>
+</tr>
+<tr>
+<td>i(D1)</td>
+<td>续流二极管</td>
+<td>M1 关断期间流过，补上 id 归零后的缺口</td>
+</tr>
+<tr>
+<td>i(C1)</td>
+<td>输出电容</td>
+<td>纹波电流 = i(L1)-i(R1)，正负交替，平均值≈0</td>
+</tr>
+</tbody>
+</table>
+<p><strong>自举/驱动路径（毫安级小电流）：</strong></p>
+<table>
+<thead>
+<tr>
+<th>电流</th>
+<th>位置</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>i(Cb)</td>
+<td>自举电容</td>
+<td>导通瞬间的电荷转移脉冲</td>
+</tr>
+<tr>
+<td>i(Db)</td>
+<td>自举二极管</td>
+<td>关断期间给 Cb 充电</td>
+</tr>
+<tr>
+<td>i(Cg)</td>
+<td>栅极电容</td>
+<td>开关沿的充放电尖峰</td>
+</tr>
+<tr>
+<td>i(B1)</td>
+<td>驱动源</td>
+<td>驱动级总输出 ≈ i(Cg)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>关键关系：</strong></p>
+<pre class="hljs"><code><div>i(L1) = i(R1) + i(C1)        （节点 out，KCL）
+i(M1) + i(D1) = i(L1)        （节点 sw，两管互补拼接成电感电流）
+i(C1) 平均值 ≈ 0             （电容不承担直流负载）
+</div></code></pre>
+<h3 id="73-dcm-电流三阶段id-从0爬升--突变--同降">7.3 DCM 电流三阶段（id 从0爬升 → 突变 → 同降）</h3>
+<table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>id (M1)</th>
+<th>i(L1)</th>
+<th>i(C1)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>① M1导通</td>
+<td><strong>从0爬升</strong></td>
+<td>从0线性升</td>
+<td>超过 i(R1) 后为正（充电）</td>
+</tr>
+<tr>
+<td>② 关断瞬间</td>
+<td><strong>突变为0</strong></td>
+<td><strong>连续不变</strong>（被D1接管）</td>
+<td>继续下降</td>
+</tr>
+<tr>
+<td>③ 关断期间</td>
+<td>0</td>
+<td>线性降到0</td>
+<td>从正转负（放电）</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>id 从 0 爬升</strong> = DCM 特征（CCM 下 id 从 IL_min&gt;0 开始）</li>
+<li><strong>id 突变归零</strong> = 电流换路，i(L1) 不能突变，由 D1 无缝接管</li>
+<li><strong>id/ic 一起下降</strong> = 电感释放能量，i(L1)&lt;i(R1) 后 C1 放电补负载</li>
+</ul>
+<h3 id="74-ic1-为什么变负">7.4 i(C1) 为什么变负？</h3>
+<pre class="hljs"><code><div>i(C1) = i(L1) - i(R1)
+</div></code></pre>
+<ul>
+<li>i(R1) 恒定 ≈ 0.78A</li>
+<li>后半周期 i(L1) &lt; i(R1) → <strong>i(C1) &lt; 0 = 电容放电</strong></li>
+</ul>
+<p><strong>正负含义：</strong></p>
+<pre class="hljs"><code><div>正 i(C1)：电感富余 → 电容充电（Vout 上升，纹波波峰）
+负 i(C1)：电感不足 → 电容放电补负载（Vout 下降，纹波波谷）
+</div></code></pre>
+<p><strong>验证：</strong> AVG[i(C1)] ≈ 0（充电量=放电量，能量守恒）。</p>
+<hr>
+<h2 id="8-滞环闭环控制buck_hysteresiscir">8. 滞环闭环控制（buck_hysteresis.cir）</h2>
+<h3 id="目标">目标</h3>
+<p>对 Vout 闭环稳压，不使用 PI，而是<strong>滞环调占空比</strong>：</p>
+<ul>
+<li>保持固定频率 PWM（50kHz），<strong>不是</strong>开关/关断</li>
+<li>Vout &lt; Vref-0.1 → 增大占空比；Vout &gt; Vref+0.1 → 减小占空比</li>
+<li>窗口内 → 保持（滞环死区 = 记忆，电容提供）</li>
+<li><strong>Vref 可编程</strong>：10ms 处 6V→8V 突变，验证闭环跟踪能力</li>
+</ul>
+<h3 id="控制架构">控制架构</h3>
+<pre class="hljs"><code><div>锯齿波载波(50kHz) ──┐
+                     ├── if(tri &lt; dctrl) → PWM ── 驱动M1
+Vout ── 滞环比较器 ── Gint积分 ── dctrl(占空比指令) ──┘
+   │
+   └── 阈值 = Vref±0.1（Vref 由 B 源生成，可突变）
+</div></code></pre>
+<h3 id="网表核心">网表核心</h3>
+<pre class="hljs"><code><div>*载波：锯齿波 0~12V，50kHz（PULSE 参数需 Trise+Ton+Tfall=周期）
+Vtri tri 0 PULSE(0 12 0 19.6u 0.2u 0.2u 20u)
+*Vref：6V，10ms 处 0.1ms 斜坡升至 8V
+Bref ref 0 V=6+2*limit((time-10m)/0.1m,0,1)
+*滞环积分器（sigmoid 平滑死区，阈值 = Vref±0.1）
+Gint 0 dctrl VALUE={0.2m*(1/(1+exp((V(out)-V(ref)+0.1)*20)) - 1/(1+exp((V(ref)+0.1-V(out))*20)))}
+Cdctrl dctrl 0 1u ic=6
+*PWM 比较：载波 &lt; 占空比指令 → 导通
+Bpwm pwm 0 V=if(V(tri)&lt;V(dctrl), 12, 0)
+</div></code></pre>
+<h3 id="仿真结果vref-突变实验">仿真结果（Vref 突变实验）</h3>
+<table>
+<thead>
+<tr>
+<th>时段</th>
+<th>Vref</th>
+<th>Vout</th>
+<th>dctrl（占空比）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0~10ms</td>
+<td>6V</td>
+<td><strong>5.95V</strong></td>
+<td>6.32V（53%）</td>
+</tr>
+<tr>
+<td>10ms 突变</td>
+<td>6→8V</td>
+<td>爬升调节</td>
+<td>6.3→8.2V</td>
+</tr>
+<tr>
+<td>18~25ms</td>
+<td>8V</td>
+<td><strong>7.94V ≈ 8V</strong> ✓</td>
+<td>8.23V（69%）</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Vout 稳态波动 ±0.05V</strong>，在 ±0.1V 滞环窗口内 ✓</li>
+<li><strong>占空比自动调节可见</strong>：53% → 69%（补偿二极管压降 + 输出升高）</li>
+<li>IL = 0.80A = 8V/10Ω ✓</li>
+<li><strong>闭环优势</strong>：Vref 突变后自动跟踪，无需手动改占空比</li>
+</ul>
+<h3 id="实现经验7-个收敛坑">实现经验（7 个收敛坑）</h3>
+<table>
+<thead>
+<tr>
+<th>问题</th>
+<th>现象</th>
+<th>解决</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>G源方向</td>
+<td>dctrl 变负值</td>
+<td><code>Gint 0 dctrl</code>（电流流入节点才充电）</td>
+</tr>
+<tr>
+<td>.op 奇异</td>
+<td>dctrl=100kV（1mA×100MΩ）</td>
+<td><code>.tran uic</code> 跳过 .op + 电容 <code>ic=</code> 初值</td>
+</tr>
+<tr>
+<td>锯齿波溢出</td>
+<td>Trise+Ton+Tfall &gt; 周期</td>
+<td>参数和 = 周期（19.6u+0.2u+0.2u=20u）</td>
+</tr>
+<tr>
+<td>缺 Cgnd</td>
+<td>gate 奇异（L=100µ 代数环）</td>
+<td>补 <code>Cgnd gate 0 1n</code></td>
+</tr>
+<tr>
+<td><strong>100kHz 长仿真卡死</strong></td>
+<td>.tran≥14ms 必卡（.raw 停 22MB，无报错）</td>
+<td>载波降 <strong>50kHz</strong>（开关事件减半）</td>
+</tr>
+<tr>
+<td><strong>Vref 突变触发崩溃</strong></td>
+<td>突变后 Vout 大幅振荡</td>
+<td>B 源 0.1ms 平滑斜坡（<code>limit()</code>）</td>
+</tr>
+<tr>
+<td><strong>积分增益过高振荡</strong></td>
+<td>Vout ±0.5V 反复穿越窗口</td>
+<td>0.5m→<strong>0.2m</strong>，波动降到 ±0.05V</td>
+</tr>
+</tbody>
+</table>
+<h3 id="关键教训长仿真卡死排查">关键教训：长仿真卡死排查</h3>
+<ol>
+<li><strong>先做极简电路隔离</strong>：去掉控制器只剩&quot;载波+PWM+功率级&quot;，若仍卡 → 问题在基础电路</li>
+<li><strong>二分定位卡点</strong>：8/12/14/18/22/25ms 逐步逼近，确认卡死时间范围</li>
+<li><strong>区分三类问题</strong>：
+<ul>
+<li>基础电路卡死 → 开关频率（100kHz→50kHz）</li>
+<li>控制器触发 → 突变平滑化（B 源斜坡）</li>
+<li>参数不匹配 → 积分增益（0.5m→0.2m）</li>
+</ul>
+</li>
+<li><strong>Vout 波动超窗口是预警</strong>：波动 ±0.5V &gt;&gt; 窗口 ±0.1V 说明环路振荡，先调参数再谈仿真</li>
+</ol>
+<hr>
+<h2 id="9-pi-控制器buck_picir">9. PI 控制器（buck_pi.cir）</h2>
+<h3 id="目标-1">目标</h3>
+<p>把滞环控制升级为 <strong>PI 控制</strong>（学习计划实验 1.1），与滞环版做最小化对比。
+核心：<code>duty = Kp*e + Ki*∫e dt</code>，其中 <code>e = Vref - Vout</code>。</p>
+<h3 id="最小化差异vs-滞环版">最小化差异（vs 滞环版）</h3>
+<table>
+<thead>
+<tr>
+<th>部分</th>
+<th>滞环版</th>
+<th>PI 版</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>误差</td>
+<td>Gint（sigmoid 死区饱和）</td>
+<td>Berr（显式误差 e=Vref-Vout）</td>
+</tr>
+<tr>
+<td>积分项</td>
+<td>Cdctrl 电容</td>
+<td>Gi（tanh 限幅）+ Ci 电容</td>
+</tr>
+<tr>
+<td>比例项</td>
+<td>无（死区代替）</td>
+<td>Bp（tanh 限幅，串联）</td>
+</tr>
+<tr>
+<td>钳位</td>
+<td>Rdc + Dclamp 二极管</td>
+<td>tanh 软限幅（无需额外元件）</td>
+</tr>
+</tbody>
+</table>
+<p>其余（载波/Vref/自举/驱动/功率级/测量）<strong>100% 一致</strong>。</p>
+<h3 id="网表核心限幅-pi">网表核心（限幅 PI）</h3>
+<pre class="hljs"><code><div>*误差
+Berr err 0 V=V(ref)-V(out)
+*积分项：tanh 限幅电流源（±0.2mA）+ 电容（无静差）
+Gi 0 int VALUE={0.2m*tanh(V(err)/0.05)}
+Ci int 0 1u ic=6
+*比例项：tanh 软限幅电压源（±5V）串联
+Bp dctrl int V=5*tanh(V(err)/1)
+*dctrl = 积分 + 比例
+</div></code></pre>
+<h3 id="仿真结果vs-滞环版">仿真结果（vs 滞环版）</h3>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>滞环版</th>
+<th>PI 版</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Vout_avg</td>
+<td>7.94V</td>
+<td><strong>7.98V</strong></td>
+</tr>
+<tr>
+<td>Duty 爬升</td>
+<td>52.7%→68.6%</td>
+<td>52.9%→69.0%</td>
+</tr>
+<tr>
+<td>Vout 波动</td>
+<td>±0.05V</td>
+<td>±0.05V</td>
+</tr>
+<tr>
+<td>IL</td>
+<td>0.798A</td>
+<td>0.798A</td>
+</tr>
+</tbody>
+</table>
+<p><strong>两者稳态结果几乎一致</strong>（都能稳压 8V）——区别在动态响应（PI 有即时比例反应，滞环靠积分慢推）。</p>
+<h3 id="关键设计为什么-pi-必须限幅">关键设计：为什么 PI 必须&quot;限幅&quot;</h3>
+<ul>
+<li><strong>无界线性误差电流会数值崩溃</strong>：启动时 e=6V → 线性电流 12mA → dctrl 剧烈冲高 + 二极管高频钳位</li>
+<li><strong>限幅 PI（tanh 软限幅）</strong>：电流有界（±0.2mA），dctrl 变化率受控 → 与滞环版同样收敛</li>
+<li>tanh 软限幅 vs 硬 limit：软限幅连续可导，避免 Newton-Raphson 啃尖角</li>
+</ul>
+<h3 id="经验教训ltspice-批处理卡死误判">经验教训：LTspice 批处理&quot;卡死&quot;误判</h3>
+<p><strong>现象</strong>：<code>LTspice.exe -b -Run xx.cir</code> 前台命令 120~180s 超时，.raw 停在 ~26MB，log 只有头部 → 误判为仿真卡死，反复改电路。</p>
+<p><strong>真相</strong>：仿真每次 3~5 秒就完成了（.raw 已写完），但 <strong>LTspice 批处理进程跑完后有时不退出/不写 .log</strong>，导致 shell 等待超时。</p>
+<p><strong>教训</strong>：</p>
+<ol>
+<li><strong>先看 log 全文再判断</strong>——&quot;Total elapsed time&quot; 出现即仿真完成</li>
+<li>.raw 停止增长 ≠ 卡死，可能是进程退出环节问题</li>
+<li>验证用 GUI 或后台任务 + 轮询 log，避免被前台超时误导</li>
+<li>多轮&quot;修复&quot;实际是徒劳，电路从头到尾都是对的</li>
+</ol>
+<h3 id="深入模拟-vs-数字在限幅上的处理区别">深入：模拟 vs 数字在&quot;限幅&quot;上的处理区别</h3>
+<p><strong>背景</strong>：PI 在 SPICE 里需要输入限幅（tanh），而软件里通常只做输出限幅 + 抗积分饱和。为什么不一样？</p>
+<p><strong>根本差异：无界值的&quot;危害&quot;不同</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>软件（数字）</th>
+<th>SPICE（模拟）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>无界中间值（Kp*e=30V）</td>
+<td>无害：寄存器能存，下一行 clamp</td>
+<td>有害：30V 是<strong>真实电压</strong>，驱动电路极端</td>
+</tr>
+<tr>
+<td>限幅实现</td>
+<td><code>if(u&gt;Umax) u=Umax</code>（一行代码）</td>
+<td>二极管钳位（物理元件）或 tanh 信号软化</td>
+</tr>
+<tr>
+<td>收敛要求</td>
+<td>无（不迭代求导）</td>
+<td>有（Newton-Raphson 需连续可导）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>软件为什么能&quot;先算后限幅&quot;</strong>：无界计算只是寄存器里的数，不产生物理后果 → 标准做法是 <code>u=Kp*e; clamp(u)</code> + 积分钳位（抗饱和）。</p>
+<p><strong>仿真为什么用输入限幅（tanh）</strong>：无界 = 真实电压/电流 → 驱动电路进入极端状态 + 硬钳位高频动作 → 数值崩溃。tanh 在信号源头软限幅（连续可导）→ 最平滑收敛。</p>
+<p><strong>输出限幅也可行（贴近软件习惯）</strong>：比例项不限幅 + 经电阻到非理想节点 + 二极管钳位——但二极管导通/关断有电流突变，数值比 tanh 略硬。</p>
+<p><strong>附赠：tanh 输入限幅隐含抗积分饱和</strong>
+软件要显式冻结积分器防 windup；tanh 限幅误差 → 积分电流恒 ≤±0.2mA → 积分器根本不会 windup → 天然抗饱和 ✓</p>
+<p><strong>tanh 能否直接用到 MCU？</strong>——能但没必要：</p>
+<ul>
+<li>带 FPU 的 MCU（Cortex-M4F）算 tanhf 约百周期，50kHz 环完全够</li>
+<li>但软件<strong>没有收敛约束</strong>，硬限幅 + 积分钳位一行代码更简单高效</li>
+<li>想要软饱和效果可用：分段线性近似 / 查表 / 硬限幅（够用）</li>
+</ul>
+<p><strong>一句话</strong>：限幅方式由&quot;载体的物理约束&quot;决定——数字算完再 clamp 无害，模拟必须让信号源头有界；tanh 是仿真专属需求，不是 MCU 的必需品。</p>
+<h2 id="10-实验-11kp-扫描buck_pi_kpcir">10. 实验 1.1：Kp 扫描（buck_pi_kp.cir）</h2>
+<p><strong>设置</strong>：固定 Ki，<code>.step param Kp 0 10 2.5</code>（Kp=0/2.5/5/7.5/10），Vref 在 <strong>6ms</strong> 处 6V→8V，<code>.tran 18ms</code>。GUI 运行 21 秒完成 5 步。</p>
+<p><strong>① 响应速度</strong>（突变后 7-8ms 占空比）：</p>
+<table>
+<thead>
+<tr>
+<th>Kp</th>
+<th>Duty_t1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0（纯I）</td>
+<td>55.6%（慢）</td>
+</tr>
+<tr>
+<td>2.5</td>
+<td>64.9%</td>
+</tr>
+<tr>
+<td>5</td>
+<td>66.5%</td>
+</tr>
+<tr>
+<td>10</td>
+<td>67.8%（快）</td>
+</tr>
+</tbody>
+</table>
+<p>→ Kp 越大，突变后占空比<strong>立即跳得越高</strong>（比例项即时响应）</p>
+<p><strong>② 超调</strong>（6.2-14ms 峰值，目标 8V）：</p>
+<table>
+<thead>
+<tr>
+<th>Kp</th>
+<th>Vout_peak</th>
+<th>超调</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>7.67V</td>
+<td>无（缓慢爬升）</td>
+</tr>
+<tr>
+<td>2.5</td>
+<td>8.36V</td>
+<td>+0.36V</td>
+</tr>
+<tr>
+<td>5</td>
+<td>8.70V</td>
+<td><strong>+0.70V（峰值）</strong></td>
+</tr>
+<tr>
+<td>7.5</td>
+<td>8.60V</td>
+<td>+0.60V</td>
+</tr>
+<tr>
+<td>10</td>
+<td>8.44V</td>
+<td>+0.44V</td>
+</tr>
+</tbody>
+</table>
+<p>→ 超调<strong>先增后减（非单调）</strong>，见附注</p>
+<p><strong>③ 稳态精度</strong>（12-18ms）：</p>
+<table>
+<thead>
+<tr>
+<th>Kp</th>
+<th>Vout_after</th>
+<th>Duty_after</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>7.78V（未爬完）</td>
+<td>67.3%</td>
+</tr>
+<tr>
+<td>2.5</td>
+<td>7.92V</td>
+<td>68.5%</td>
+</tr>
+<tr>
+<td>10</td>
+<td>7.96V</td>
+<td>68.9%</td>
+</tr>
+</tbody>
+</table>
+<p>→ 所有 Kp 均<strong>无静差</strong>（I 项作用）✓，Kp 大收敛略快</p>
+<p><strong>④ 验证标准对照</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>观察项</th>
+<th>纯 I</th>
+<th>PI（Kp↑）</th>
+<th>结论</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>响应速度</td>
+<td>慢</td>
+<td>快</td>
+<td>✅ 符合预期</td>
+</tr>
+<tr>
+<td>超调</td>
+<td>小</td>
+<td>增大</td>
+<td>✅ 符合预期</td>
+</tr>
+<tr>
+<td>稳态精度</td>
+<td>无静差</td>
+<td>无静差</td>
+<td>✅ 符合预期</td>
+</tr>
+</tbody>
+</table>
+<p><strong>⑤ 洞察：超调非单调（限幅 PI 特有）</strong></p>
+<p>超调峰值在 Kp=5 最大，Kp=7.5/10 反而减小。原因：比例项被 <strong>tanh 限幅（±5V）</strong>——Kp 超过一定值后 <code>Kp*tanh(e/1)</code> 提前饱和，比例输出不再增大；大 Kp 让 dctrl 更快接近稳态，过冲被限制。<strong>这是限幅 PI 与理想 PI（超调随 Kp 单调增）的差异</strong>，也是固件抗积分饱和能改善超调的原理。</p>
+<p><strong>嵌入式映射</strong>：Kp 决定&quot;即时反应&quot;，Ki 决定&quot;消除静差&quot;；固件 PID 整定时，Kp 增大加快响应但超调风险上升，输出限幅/抗饱和能压制超调。</p>
+<h2 id="11-实验-12环路稳定性分析">11. 实验 1.2：环路稳定性分析</h2>
+<p><strong>方法</strong>：开关电路无法直接 .ac，用<strong>平均化小信号模型</strong>（受控源替代开关）+ 解析传递函数。</p>
+<p><strong>功率级（CCM 平均模型）</strong>：</p>
+<pre class="hljs"><code><div>Gvd(s) = Vout/dctrl = 1 / (s²LC + sL/R + 1)
+</div></code></pre>
+<p>验证：10Hz 处 |Gvd|≈0dB，与 LTspice .ac 实测一致 ✓</p>
+<p><strong>环路增益</strong>：<code>T(s) = (Kp + Ki/s) * Gvd(s)</code>（H=1 直接反馈）</p>
+<p><strong>结果（Kp=5, Ki=1000, L=100µH）</strong>：</p>
+<ul>
+<li>增益穿越频率 <strong>fc = 3897 Hz</strong></li>
+<li>相位裕度 <strong>PM = 2.3°</strong>（临界不稳定！）</li>
+</ul>
+<p><strong>Kp 扫描</strong>（L=100µH）：</p>
+<table>
+<thead>
+<tr>
+<th>Kp</th>
+<th>fc (Hz)</th>
+<th>PM</th>
+<th>判据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.5</td>
+<td>187</td>
+<td><strong>119.8°</strong></td>
+<td>稳定 ✓</td>
+</tr>
+<tr>
+<td>1.0</td>
+<td>2247</td>
+<td>4.0°</td>
+<td>临界</td>
+</tr>
+<tr>
+<td>5.0</td>
+<td>3897</td>
+<td>2.3°</td>
+<td>临界</td>
+</tr>
+<tr>
+<td>20</td>
+<td>7292</td>
+<td>1.3°</td>
+<td>临界</td>
+</tr>
+</tbody>
+</table>
+<p>→ <strong>Kp↑ → fc↑、PM↓</strong> ✓</p>
+<p><strong>L 扫描</strong>（Kp=5）：</p>
+<table>
+<thead>
+<tr>
+<th>L (µH)</th>
+<th>fc (Hz)</th>
+<th>PM</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>50</td>
+<td>5512</td>
+<td>1.7°</td>
+</tr>
+<tr>
+<td>100</td>
+<td>3897</td>
+<td>2.3°</td>
+</tr>
+<tr>
+<td>400</td>
+<td>1945</td>
+<td>4.7°</td>
+</tr>
+</tbody>
+</table>
+<p>→ <strong>L↑ → fc↓、PM↑</strong> ✓</p>
+<p><strong>验证标准对照</strong>：PM&gt;45° 稳定（仅 Kp=0.5 满足）✅；Kp↑ 裕度↓ ✅；L↑ 穿越↓ ✅</p>
+<p><strong>关键发现（重要）</strong>：</p>
+<ul>
+<li>LC 谐振 f0 = 1/(2π√(LC)) ≈ 1592Hz，而 fc=3897Hz <strong>穿越在谐振点之后</strong></li>
+<li>LC 双极点贡献 180° 滞后 + 积分项 90° → 穿越处相位逼近 -180°</li>
+<li><strong>正确设计应让 fc 远低于 f0</strong>（工程经验：fc &lt; f0/5，如 fc≈300Hz），否则相位裕度不足</li>
+<li>这也解释了实验 1.1 中 Kp=5 大超调（8.7V）——低相位裕度的时域表现</li>
+</ul>
+<p><strong>嵌入式映射</strong>：数字电源 PID 参数必须有相位裕度依据——穿越频率定带宽、相位裕度定稳定储备；不能盲调参数，这就是固件稳定性设计的理论根基。</p>
+<h3 id="手推延伸从-fcpm-反推-kpki完整过程">手推延伸：从 fc/PM 反推 Kp/Ki（完整过程）</h3>
+<p><strong>设计目标</strong>：fc = 300Hz（约 f0/5），PM ≥ 45°</p>
+<p><strong>已知</strong>：L=100µH, C=100µF, R=10Ω，f0=1/(2π√LC)=1592Hz</p>
+<p><strong>步骤 1：算 Gvd 在 fc 处的幅值和相位</strong></p>
+<pre class="hljs"><code><div>ωc = 2π·300 = 1885 rad/s
+Gvd = 1/(1-ω²LC + jωL/R)
+ω²LC = 1885²·1e-8 = 0.0355
+ωL/R = 1885·1e-4/10 = 0.0189
+|Gvd| = 1/√(0.9645²+0.0189²) ≈ 1.037
+∠Gvd = -atan(0.0189/0.9645) ≈ -1.1°
+</div></code></pre>
+<p><strong>步骤 2：定 PI 零点（保证 fc 处相位贡献小）</strong></p>
+<pre class="hljs"><code><div>令 ωz = Ki/Kp = ωc/10 = 188.5 rad/s
+→ 在 fc 处：Ki/(ωc·Kp) = 0.1，∠Gc = -atan(0.1) ≈ -5.7°
+</div></code></pre>
+<p><strong>步骤 3：增益条件 |T(fc)| = 1 定 Kp</strong></p>
+<pre class="hljs"><code><div>|Gc| = Kp·√(1+0.1²) = 1.005·Kp
+|T| = 1.005·Kp·1.037 = 1 → Kp = 0.96
+Ki = ωz·Kp = 188.5·0.96 = 181
+</div></code></pre>
+<p><strong>步骤 4：验证相位裕度</strong></p>
+<pre class="hljs"><code><div>∠T = ∠Gc + ∠Gvd = -5.7° + (-1.1°) = -6.8°
+PM = 180° - 6.8° = 173°  ✓ 远大于 45°
+</div></code></pre>
+<p><strong>步骤 5：解读——为什么 PM 这么大？</strong></p>
+<pre class="hljs"><code><div>fc=300Hz &lt;&lt; f0=1592Hz → Gvd 几乎无相位滞后（-1°）
+→ 总相位滞后仅 6.8° → PM 巨大
+</div></code></pre>
+<p><strong>代价</strong>：fc 低 = 带宽低 = 响应慢。这是&quot;稳定与速度&quot;的权衡。</p>
+<p><strong>步骤 6：迭代提 fc（若需更快响应）</strong></p>
+<pre class="hljs"><code><div>提高 fc 直到 PM 降到 45-60°（如 fc=800Hz 重新算 Gvd）
+fc 越接近 f0，Gvd 相位骤降 → PM 快速变小 → 找到响应与稳定的平衡点
+</div></code></pre>
+<p><strong>设计流程总结（可复用）</strong>：</p>
+<pre class="hljs"><code><div>① 选 fc（带宽目标，经验 fc &lt; f0/5 起步）
+② 算 Gvd(fc) 幅值相位
+③ 定 PI 零点 ωz = fc/10
+④ 由 |T(fc)|=1 解 Kp，再由 Ki=ωz·Kp 解 Ki
+⑤ 算 PM 验证；PM 太大→提 fc 迭代，PM&lt;45°→降 fc 或加补偿
+⑥ 时域 .tran 验证
+</div></code></pre>
+<p><strong>嵌入式映射</strong>：这套手推就是固件 PID 整定的&quot;解析法&quot;——Kp/Ki 由 fc/PM 目标反推，而不是盲目试参。仿真或实机验证只是最后确认。</p>
+<h2 id="12-环路理论概念基础">12. 环路理论：概念基础</h2>
+<h3 id="121-小信号线性化--平均化模型软件视角">12.1 小信号线性化 &amp; 平均化模型（软件视角）</h3>
+<blockquote>
+<p>给软件背景读者：为什么开关电路不能直接 .ac，平均化到底是什么。</p>
+</blockquote>
+<p><strong>① 什么是线性系统</strong></p>
+<pre class="hljs"><code><div>① 叠加性 f(a+b)=f(a)+f(b)
+② 齐次性 f(k·x)=k·f(x)
+</div></code></pre>
+<ul>
+<li>只有线性系统才能用拉普拉斯/傅里叶变换做频域分析</li>
+<li>开关电路（MOS 通断、二极管换流）是强非线性 → 不能直接频域分析</li>
+</ul>
+<p><strong>② 什么是 .ac 小信号线性化</strong></p>
+<pre class="hljs"><code><div>1. 求直流工作点（电容开路、电感短路，电路&quot;静止&quot;）
+2. 在该点用斜率（导数）代替曲线（泰勒一阶：f(x0+Δx)≈f(x0)+f'(x0)Δx）
+3. 注入 1V 正弦，扫频，输出增益+相位
+</div></code></pre>
+<ul>
+<li><strong>失效原因</strong>：开关电路没有固定工作点（MOS 每 20µs 开关一次，永远在动），强行线性化得到假结果</li>
+<li>软件类比：对非周期信号做 FFT，结果看似有条纹实际是错的</li>
+</ul>
+<p><strong>③ 平均化模型（核心）</strong></p>
+<ul>
+<li>思路：只关心开关周期之上的慢变行为（环路调节），取一个周期的时间平均</li>
+<li>数学本质 = 以开关频率为界的<strong>低通滤波</strong>（丢弃 50kHz 斩波高频，保留环路低频趋势）</li>
+<li>软件类比：滑动平均/低通滤波去噪，只剩信号的趋势</li>
+</ul>
+<pre class="hljs"><code><div>真实开关：vsw = Vin（导通）/ 0（续流）→ 非线性
+平均化后：vsw = d × Vin（受控源）     → 线性！
+</div></code></pre>
+<p><strong>④ 平均化后电路变线性</strong></p>
+<pre class="hljs"><code><div>[开关网络] ── L ──┬── C ── R     ← 原：非线性
+[受控源]  ── L ──┬── C ── R     ← 后：纯 L-C-R 线性网络
+</div></code></pre>
+<p>→ 受控源线性 + L/C/R 线性 → 可以 .ac 了（buck_ac.cir 的 <code>Esw</code> 就是干这个）</p>
+<p><strong>⑤ 完整思维链</strong></p>
+<pre class="hljs"><code><div>Buck（非线性）→ 平均化（低通）→ 线性模型 → Gvd(s) 解析
+→ T(s)=Gc·Gvd（开环增益）→ 波特图 → 相位裕度 → 稳定性
+</div></code></pre>
+<p><strong>一句话</strong>：小信号线性化 = 在静止点用斜率近似；平均化 = 把开关通断&quot;低通滤波&quot;掉只剩趋势，从而把非线性电路变成可频域分析的线性电路；.ac 失效 = 开关电路没有静止点。</p>
+<h3 id="122-ac-起什么作用环路增益怎么测">12.2 .ac 起什么作用？环路增益怎么测？</h3>
+<p><strong>.ac 的机制（三步）</strong>：</p>
+<pre class="hljs"><code><div>1. 找直流工作点（电容开路、电感短路）
+2. 线性化（工作点处用斜率代替曲线）
+3. 复频域求解：对每个频率解代数方程 → 增益+相位
+</div></code></pre>
+<p>软件类比：给系统传函采样频率响应（类似 freqz 画滤波器幅相特性）。</p>
+<p><strong>.ac 的三大作用</strong>：</p>
+<ol>
+<li><strong>频率特性</strong>：带宽（-3dB 点）、谐振峰、滚降斜率</li>
+<li><strong>稳定性判断</strong>（核心）：环路增益 T(s) 的 fc 和 PM</li>
+<li><strong>验证数学推导</strong>：手推 Gvd(s) 用 .ac 对照</li>
+</ol>
+<p><strong>关键：注入点必须是&quot;环路断开处&quot;，不是输入端</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>注入位置</th>
+<th>测到</th>
+<th>意义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>输入端</td>
+<td>Vout/Vin</td>
+<td>只是电源对扰动的响应，<strong>不含反馈环</strong></td>
+</tr>
+<tr>
+<td>环路断开处</td>
+<td><strong>环路增益 T(s)</strong></td>
+<td>含控制器+功率级+反馈全链，<strong>决定稳定性</strong></td>
+</tr>
+</tbody>
+</table>
+<pre class="hljs"><code><div>       ┌──────── 环路断开，注入 ac ────────┐
+       ↓                                  │
+[误差] → [Gc 控制器] → [Gvd 功率级] → [Vout] ─┘
+         ↑ 返回 = 输入 × T(s)
+</div></code></pre>
+<p><strong>T(s) 含义</strong>：信号绕环路一圈的放大倍数。|T|&lt;1 稳定；|T|≥1 且相位-180° 振荡。</p>
+<p><strong>完整理解链（定 Kp/Ki 的流程）</strong>：</p>
+<pre class="hljs"><code><div>疑问 Kp/Ki 取多少？
+  ↓ 平均化 → 线性系统（Gvd、Gc）
+  ↓ 环路断开处注入扫频 → T(s)=Gc·Gvd
+  ↓ 读 fc（|T|过0dB）、PM（fc处相位+180°）
+  ↓ PM&gt;45° 稳定；PM&lt;0° 振荡
+  ↓ 调 Kp/Ki → fc 和 PM 落在设计目标（fc&lt;f0/5，PM&gt;45°）
+  ↓ 时域 .tran 验证（无超调/无振荡）
+  ↓ 得最优 Kp/Ki
+</div></code></pre>
+<p><strong>一句话</strong>：.ac = 在静止点线性化后注入不同频率正弦，测放大倍数和相位延迟，回答&quot;系统对什么频率响应、什么频率会振荡&quot;。对开关电路先平均化才能用。<strong>测稳定性必须断开环路测 T(s)，而不是测输入端传递函数。</strong></p>
+<h3 id="123-hs--gs--环路断开--反推控制器参数">12.3 H(s) + G(s) + 环路断开 = 反推控制器参数</h3>
+<p><strong>标准控制框图</strong>（把实验 1.2 符号化）：</p>
+<pre class="hljs"><code><div>        ┌──────── G(s) ──────── H(s) ────────┐
+r ──(+)──┤  (控制器 PI)     (功率级 Buck)      ├── y (Vout)
+     (-) │                                    │
+        └─────────── 反馈(系数=1) ────────────┘
+</div></code></pre>
+<ul>
+<li><strong>H(s)</strong> = 被控对象 = Gvd(s) = <code>1/(s²LC+sL/R+1)</code>（功率级，已知/可测）</li>
+<li><strong>G(s)</strong> = 控制器 = <code>Kp + Ki/s</code>（<strong>待定参数</strong>）</li>
+<li><strong>环路增益 T(s)</strong> = G(s)·H(s)（反馈系数 1）</li>
+</ul>
+<p><strong>待求解的 G(s) 参数（Kp/Ki）→ 通过测 T(s) 反推</strong>：</p>
+<pre class="hljs"><code><div>1. 环路断开处注入小信号（Middlebrook 法）
+2. 测绕一圈的总增益 = T(s) = G·H
+3. 从 T(s) 读 fc（|T|=0dB）和 PM（fc 处相位+180°）
+4. 因 H 已知，T 的形状 → 反推 G 的参数
+</div></code></pre>
+<p><strong>断开点选哪都行</strong>：误差点或输出反馈点等价（都测 G·H）。</p>
+<p><strong>术语修正</strong>：</p>
+<ul>
+<li>&quot;开环传递函数&quot;严格指 <strong>T(s) = G·H</strong>（环路断开时的总增益）</li>
+<li>H(s) 单独叫&quot;被控对象传递函数&quot;，G(s) 叫&quot;控制器传递函数&quot;</li>
+</ul>
+<p><strong>一句话</strong>：H(s) 是功率级、G(s) 是待定控制器，断开环路注入小信号测得 T(s)=G·H，从 T(s) 的 fc 和 PM 反推 Kp/Ki——这就是环路设计的全部逻辑（Middlebrook 测量法原理）。</p>
+<h3 id="124-为什么频域分析必要lc-的本质4-问-4-答">12.4 为什么频域分析必要？L/C 的本质（4 问 4 答）</h3>
+<p><strong>① 纯阻性电路需要频域分析吗？——不需要</strong></p>
+<ul>
+<li>纯阻性：阻抗不随频率变，<code>Vout = Vin·R2/(R1+R2)</code> 对所有频率恒成立，一个代数方程就够</li>
+<li>含 L/C：阻抗随频率变（L 阻抗=jωL，C 阻抗=1/(jωC)）→ 必须频域</li>
+<li>软件类比：纯阻性=无状态函数 y=2x；含 L/C=有状态系统（IIR），必须用 H(s)/H(z) 描述</li>
+</ul>
+<p><strong>② 为什么 L/C 引入频率依赖？——微分/积分 = 记忆</strong></p>
+<pre class="hljs"><code><div>电感：v = L·di/dt   （微分）
+电容：i = C·dv/dt   （微分）
+</div></code></pre>
+<p>微分/积分 → 系统有状态、输出依赖历史 → 用频率描述&quot;记忆长度&quot;（不同频率经历的记忆不同）</p>
+<p><strong>③ 纯感性 vs 纯容性分析区别？——相位相反</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>纯 L</th>
+<th>纯 C</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>阻抗</td>
+<td>jωL</td>
+<td>1/(jωC)</td>
+</tr>
+<tr>
+<td>相位</td>
+<td><strong>+90°</strong></td>
+<td><strong>-90°</strong></td>
+</tr>
+<tr>
+<td>低频</td>
+<td>短路</td>
+<td>断路</td>
+</tr>
+<tr>
+<td>高频</td>
+<td>断路</td>
+<td>短路</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>纯 L 配合 R 做高通；纯 C 配合 R 做低通</li>
+<li>L+C 相位相反 → 谐振频率互相抵消 → 谐振峰</li>
+<li>相位决定稳定性（PM），故必须看完整波特图（幅值+相位）</li>
+</ul>
+<p><strong>④ 为什么 fc 要远低于 f0（谐振）？——LC 相位骤降 -180°</strong></p>
+<pre class="hljs"><code><div>fc &lt;&lt; f0：∠Gvd ≈ 0°   → PM 大，稳
+fc = f0： ∠Gvd ≈ -90°（且 -40dB/dec 陡降）
+fc &gt;&gt; f0：∠Gvd → -180° → 环路相位超 -180° → 振荡
+</div></code></pre>
+<ul>
+<li>LC 双极点共贡献 -180°（每个 -90°），加 PI 积分器 -90° → 总相位必超 -180°</li>
+<li>工程经验：<code>fc = f0/5</code> 起步，<code>fc ≥ f0</code> 必不稳</li>
+<li>留余量是为了容忍参数漂移（电感饱和、电容老化 ±20%）</li>
+</ul>
+<p><strong>⑤ fc 的作用 &amp; 与 Kp/Ki 的关联</strong></p>
+<ul>
+<li>fc 三作用：控制带宽（响应速度）/ PM 读取点 / 噪声滤波边界</li>
+<li><strong>Kp 决定 fc</strong>：<code>|T(fc)|=1</code> → <code>Kp ≈ 1/|Gvd(fc)|</code>，Kp↑ → fc↑</li>
+<li><strong>Ki 决定低频</strong>：消除静差，设计 PI 零点 = fc/10（保证 fc 处积分项相位影响 &lt;10°）</li>
+<li><strong>fc 是设计锚点</strong>：先定 fc（带宽需求）→ 解 Kp → 解 Ki → 查 PM 验证</li>
+</ul>
+<p><strong>一句话</strong>：频域分析之所以必要，是因为 L/C 的&quot;记忆&quot;（微分/积分）让电路行为随频率变化；fc 是带宽设计锚点（Kp 定它），f0 是稳定红线（fc 必须远低于它）。</p>
+<h3 id="125-为什么增益1fc这么重要与真实工作的联系">12.5 为什么&quot;增益=1&quot;（fc）这么重要？与真实工作的联系</h3>
+<p><strong>① 增益=1 的物理意义（信号绕一圈）</strong></p>
+<pre class="hljs"><code><div>误差 → Gc → Gvd → Vout → 反馈 → 回到误差
+      （信号绕一圈被放大 T 倍）
+</div></code></pre>
+<ul>
+<li>|T|&gt;1：信号绕一圈<strong>变大</strong> → 环路在起作用（强负反馈）</li>
+<li>|T|&lt;1：信号绕一圈<strong>变小</strong> → 环路管不动这些频率</li>
+<li><strong>|T|=1（fc）= 分界线：环路&quot;还管得动&quot;的最高频率</strong></li>
+</ul>
+<p><strong>② 为什么 fc 处相位决定振荡（自激条件）</strong></p>
+<pre class="hljs"><code><div>若某频率满足：|T|≥1 且 ∠T=-180°（负反馈变正反馈）
+→ 信号绕一圈同相且不衰减 → 叠加增强 → 自激振荡
+</div></code></pre>
+<p>fc 是&quot;增益还够=1&quot;的地方，再高频率增益衰减振荡不起 → 振荡最可能发生在 fc 附近 → 必须查 fc 处相位（PM）</p>
+<p><strong>③ fc = 控制带宽：真实扰动也是&quot;频谱&quot;的</strong></p>
+<table>
+<thead>
+<tr>
+<th>真实扰动</th>
+<th>频率</th>
+<th>相对 fc</th>
+<th>环路作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>负载突变（功耗跳变）</td>
+<td>低频</td>
+<td>&lt; fc</td>
+<td><strong>深度抑制</strong>（稳压）</td>
+</tr>
+<tr>
+<td>输入波动（整流纹波）</td>
+<td>50/100Hz</td>
+<td>&lt;&lt; fc</td>
+<td>深度抑制</td>
+</tr>
+<tr>
+<td>开关纹波（PWM）</td>
+<td>50kHz</td>
+<td>&gt;&gt; fc</td>
+<td>环路不管，靠 LC 滤</td>
+</tr>
+<tr>
+<td>高频噪声</td>
+<td>MHz</td>
+<td>&gt;&gt; fc</td>
+<td>环路不管</td>
+</tr>
+</tbody>
+</table>
+<p><strong>④ 定量：灵敏度函数 S(s)=1/(1+T(s))</strong></p>
+<pre class="hljs"><code><div>f &lt;&lt; fc：T 大 → S≈1/T → 扰动被抑制 1/T 倍
+f = fc： T=1  → S=1/2（-6dB）→ 抑制剩一半
+f &gt;&gt; fc：T 小 → S≈1 → 扰动原样通过
+</div></code></pre>
+<p>fc = S 的转折点 = 控制带宽 = &quot;能跟上/抑制的最快扰动频率&quot;</p>
+<p><strong>软件类比</strong>：fc = 控制系统带宽/响应速度上限——扰动太快（&gt;fc）控制器反应不过来，像 PID 的采样带宽。</p>
+<p><strong>一句话</strong>：fc（增益=1 点）= 环路&quot;还管得动&quot;的最高频率 = 控制带宽。低于 fc 的扰动（负载/输入波动）被抑制，高于 fc 的（开关纹波/噪声）靠 LC 滤。自激振荡恰好发生在 fc 这个&quot;增益还够&quot;的点——所以设计必须保证 fc 处相位裕度足够（fc 远低于 f0 正是为此）。</p>
+<h3 id="126-fc-vs-f0-的位置关系--稳定性的全部秘密">12.6 fc vs f0 的位置关系 = 稳定性的全部秘密</h3>
+<p><strong>① 现象</strong>：实验 1.2 中 fc=3897Hz &gt; f0=1592Hz → PM=2.3°（临界不稳定）</p>
+<p><strong>② f0 = LC 谐振频率 = 相位&quot;急转弯&quot;的拐点</strong></p>
+<pre class="hljs"><code><div>f0 = 1/(2π√(LC)) = 1592Hz，三个含义：
+1. 物理共振：L/C 阻抗互相抵消，功率级自身增益有峰值
+2. 相位拐点：f0 前后 ∠Gvd 从 0° 快速滑向 -180°
+3. 功率级&quot;带宽天花板&quot;：能自然通过信号的上限
+</div></code></pre>
+<p><strong>③ 为什么 fc &lt; f0 才能保证 PM（核心机制）</strong></p>
+<pre class="hljs"><code><div>∠Gvd(f) 变化：
+  f &lt;&lt; f0：∠Gvd ≈ 0°（L短路C断路，纯电阻）
+  f = f0： ∠Gvd ≈ -90°（相位拐点）
+  f &gt;&gt; f0：∠Gvd → -180°（双极点渐近）
+
+PM = 180° + ∠Gc(fc) + ∠Gvd(fc)
+
+① fc &lt;&lt; f0：∠Gvd≈0° → PM≈90°~180° ✓ 稳
+② fc &gt;&gt; f0：∠Gvd≈-180° → PM≈∠Gc≈-90°~0° ✗ 危险
+</div></code></pre>
+<p><strong>④ 为什么拐弯这么急</strong>：LC 是二阶（双极点），相位在 f0 附近一个十倍频内从 -90° 冲到接近 -180°（-40dB/dec 滚降对应 180° 相位滞后）→ fc 稍越过 f0，PM 迅速恶化</p>
+<p><strong>⑤ 图示</strong></p>
+<pre class="hljs"><code><div>|T| (dB)
+  ↑  ╱‾‾‾‾‾ ← T&gt;0dB：环路管得住（深度抑制）
+  │ ╱
+0 ├──────┼─── fc ← 边界（管得住/管不住）
+  │      ╲
+  │       ╲ ← T&lt;0dB：环路管不住（靠 LC）
+  └───┴────┴──→ 频率
+     f0=1592  fc=3897
+     ↑相位拐点 ↑已过拐点 → PM=2.3°危险
+</div></code></pre>
+<p><strong>⑥ 正确设计</strong>：fc 落在 f0 左侧（fc &lt; f0/5）→ ∠Gvd 还没拐弯（≈-1°）→ PM 巨大（fc=300Hz 手推得 PM=173°）→ 极稳，代价是带宽低</p>
+<p><strong>一句话</strong>：f0 是相位急转弯的拐点，fc 是控制带宽边界；fc &gt; f0 意味着穿越点已落在相位骤降区之后（∠Gvd≈-180°）→ PM≈0 → 临界不稳定；fc 远低于 f0 才能保证穿越时相位还没烂 → PM 充足。这就是 &quot;fc &lt; f0/5&quot; 的依据。</p>
+<hr>
+<h2 id="13-实验验证记录vout-汇总">13. 实验验证记录（Vout 汇总）</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>配置</th>
+<th>Vout</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>①</td>
+<td>NMOS+二极管, Vg=12V, R=1Ω</td>
+<td>4.17V</td>
+<td>Vgs不足+二极管压降</td>
+</tr>
+<tr>
+<td>②</td>
+<td>NMOS+二极管, Vg=20V, R=1Ω</td>
+<td>5.58V</td>
+<td>仅二极管压降</td>
+</tr>
+<tr>
+<td>③</td>
+<td>理想开关+二极管, R=1Ω</td>
+<td>5.635V</td>
+<td>仅二极管压降</td>
+</tr>
+<tr>
+<td>④</td>
+<td>同步整流(双理想开关), R=1Ω</td>
+<td>5.99V</td>
+<td>≈6V ✓</td>
+</tr>
+<tr>
+<td>⑤</td>
+<td>NMOS+二极管, Vg=12V, R=10Ω</td>
+<td>6.276V</td>
+<td>DCM+Vgs不足巧合抵消</td>
+</tr>
+<tr>
+<td>⑥</td>
+<td>NMOS+二极管, Vg=20V, R=10Ω</td>
+<td>7.81V</td>
+<td>DCM 效应暴露</td>
+</tr>
+<tr>
+<td>⑦</td>
+<td>自举驱动, R=10Ω</td>
+<td>7.83V</td>
+<td>DCM 遗留问题</td>
+</tr>
+<tr>
+<td>⑧</td>
+<td>自举驱动+CCM(L=100µ), R=10Ω</td>
+<td>5.72V</td>
+<td>✓ 最接近理论值(仅剩二极管压降)</td>
+</tr>
+<tr>
+<td>⑨</td>
+<td>滞环闭环(buck_hysteresis.cir)</td>
+<td><strong>5.997V</strong></td>
+<td>✓✓ 闭环稳压 6V±0.1V</td>
+</tr>
+<tr>
+<td>⑩</td>
+<td>滞环闭环+Vref突变 6→8V</td>
+<td><strong>7.94V</strong></td>
+<td>✓✓ 闭环跟踪 8V，占空比自动 53%→69%</td>
+</tr>
+<tr>
+<td>⑪</td>
+<td>PI 控制(buck_pi.cir)</td>
+<td><strong>7.98V</strong></td>
+<td>✓✓ 限幅PI稳压 8V（与滞环一致）</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="14-经验总结">14. 经验总结</h2>
+<ol>
+<li><strong>Vout = Vin×D 仅在 CCM + 理想器件下严格成立</strong></li>
+<li><strong>判断工作模式看电感电流</strong>：IL_min &gt; 0 → CCM；≈0 → DCM（输出偏高）</li>
+<li><strong>高边 NMOS 必须自举驱动</strong>（或低边 NMOS / 同步整流）</li>
+<li><strong>boot 低电平判断模式</strong>：回到 12V 附近 → CCM；停在 ~Vout+Vcb → DCM</li>
+<li><strong>自举仿真要点</strong>：boot 节点加直流路径；驱动源加输出阻抗，避免理想源反馈环</li>
+<li><strong>大电感触发代数环奇异</strong>：驱动 B 源依赖 sw 时，加 Cgnd 打断反馈环</li>
+<li><strong>对比实验最小差异原则</strong>：两文件只留一处功能差异，便于直观对比</li>
+<li><strong>drv 绝对值浮动正常</strong>：看 Vgs 而非 V(drv)；负值来自二极管钳位 -0.7V</li>
+<li><strong>电流看 KCL</strong>：i(L1)=i(R1)+i(C1)；i(M1)+i(D1)=i(L1)；i(C1) 平均≈0</li>
+<li><strong>i(C1) 负值 = 电容放电</strong>，对应 Vout 纹波波谷，属正常现象</li>
+<li><strong>PI 必须限幅</strong>：无界线性误差电流数值崩溃，tanh 软限幅保证收敛（与滞环同结构）</li>
+<li><strong>LTspice 批处理误判坑</strong>：<code>.raw</code> 写完但进程不退出 ≠ 卡死，先看 log 的 <code>Total elapsed time</code> 再判断</li>
+<li><strong>µ 用 u；注释用英文；FLAG 节点名与 .meas 一致</strong></li>
+</ol>
+<hr>
+<h2 id="15-相关文件">15. 相关文件</h2>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>buck.cir</code></td>
+<td>Buck 电路网表（自举驱动，DCM，L=10µ）</td>
+</tr>
+<tr>
+<td><code>buck_ccm.cir</code></td>
+<td>同 buck.cir，仅 L1=100µ（CCM）+ Cgnd 收敛辅助</td>
+</tr>
+<tr>
+<td><code>buck_hysteresis.cir</code></td>
+<td>滞环闭环控制（50kHz PWM + Vref 可编程突变）</td>
+</tr>
+<tr>
+<td><code>buck_pi.cir</code></td>
+<td>PI 控制（限幅 PI：tanh 积分 + tanh 比例）</td>
+</tr>
+<tr>
+<td><code>buck.asc</code></td>
+<td>原理图</td>
+</tr>
+<tr>
+<td><code>buck.log</code></td>
+<td>仿真日志</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p><em>学习日期：2026-08-11</em></p>
+
+</body>
+</html>

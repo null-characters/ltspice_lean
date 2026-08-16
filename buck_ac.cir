@@ -1,0 +1,45 @@
+*Buck Averaged Small-Signal Model - AC analysis (Exp 1.2)
+*Average model replaces switch with controlled sources (CCM):
+*  vsw = d * Vin  (controlled voltage source)
+*  iin = d * iL   (controlled current source, negligible for loop here)
+*Used to measure control-to-output transfer function Gvd(s) = Vout/dctrl
+
+Vin in 0 12
+
+*=== Averaged power stage ===
+*Switch average: vsw = dctrl_voltage (0-12V duty command maps to 0-12V avg switch)
+Esw sw 0 VALUE={V(din)}
+L1 sw out 100u
+C1 out 0 100u
+R1 out 0 10
+
+*=== AC injection at duty command ===
+*Single source: 6V DC operating point (50% duty) + 1V AC probe
+Vdin din 0 DC 6 AC 1
+
+*=== AC Analysis ===
+.ac dec 100 10 1meg
+
+*=== Sample Gvd at key frequencies (magnitude + phase) ===
+.meas gain_10Hz FIND mag(V(out)) AT 10
+.meas phase_10Hz FIND ph(V(out)) AT 10
+.meas gain_100Hz FIND mag(V(out)) AT 100
+.meas phase_100Hz FIND ph(V(out)) AT 100
+.meas gain_500 FIND mag(V(out)) AT 500
+.meas phase_500 FIND ph(V(out)) AT 500
+.meas gain_1k FIND mag(V(out)) AT 1k
+.meas phase_1k FIND ph(V(out)) AT 1k
+.meas gain_2k FIND mag(V(out)) AT 2k
+.meas phase_2k FIND ph(V(out)) AT 2k
+.meas gain_3k FIND mag(V(out)) AT 3k
+.meas phase_3k FIND ph(V(out)) AT 3k
+.meas gain_5k FIND mag(V(out)) AT 5k
+.meas phase_5k FIND ph(V(out)) AT 5k
+.meas gain_10k FIND mag(V(out)) AT 10k
+.meas phase_10k FIND ph(V(out)) AT 10k
+.meas gain_20k FIND mag(V(out)) AT 20k
+.meas phase_20k FIND ph(V(out)) AT 20k
+.meas gain_50k FIND mag(V(out)) AT 50k
+.meas phase_50k FIND ph(V(out)) AT 50k
+
+.end
