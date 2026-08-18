@@ -1,26 +1,20 @@
 *Buck Converter - Type-II Compensation (Closed Loop)
 *50kHz PWM, duty from Type-II compensator, e = Vref - Vout
-*Vref steps 6V->8V at 10ms. Clamp duty 0~100%.
-*Type-II: fc=150Hz(运放稳定上限), fz=1592Hz(LC), fp=1751Hz(1.1xf0), G0=933
-*设计: type2_design.py 100u 100u 10 150 --fz 1592 --fp 1751
-
-
-
-
-
-
+*Vref steps 6V->8V at 50ms. Clamp duty 0~100%.
+*Type-II: fc=150Hz (opamp stable max), fz=1592Hz (LC), fp=1751Hz (1.1xf0), G0=933
+*Design: type2_design.py 100u 100u 10 150 --fz 1592 --fp 1751
 
 Vin in 0 12
 
 *=== Type-II Duty-Cycle Controller (op-amp implementation) ===
 *Gc(s) = (1+sR2Cf1) / (sRin(Cf1+Cf2)(1+sR2Cf1Cf2/(Cf1+Cf2)))
-*  fz = 1/(2πR2Cf1) = 1592Hz (LC 谐振，零点补偿)
-*  fp = 1/(2πR2·Cf1Cf2/(Cf1+Cf2)) = 1751Hz (1.1×f0，紧贴 f0 压低谐振峰防第二穿越)
-*  积分极点 s=0：消除静差
+*  fz = 1/(2*pi*R2*Cf1) = 1592Hz (LC resonance, zero compensation)
+*  fp = 1/(2*pi*R2*Cf1*Cf2/(Cf1+Cf2)) = 1751Hz (1.1xf0, close to f0 to suppress resonance peak / 2nd crossover)
+*  integral pole s=0: removes steady-state error
 *Carrier: sawtooth 0~12V, period 20us (50kHz), duty = V(vop)/12
 *PULSE(V1 V2 Td Trise Tfall Ton Tperiod): 19.6u rise + 0.2u hold + 0.2u fall = 20u
 Vtri tri 0 PULSE(0 12 0 19.6u 0.2u 0.2u 20u)
-*Reference: 6V, ramps to 8V over 0.1ms starting at 10ms, then holds
+*Reference: 6V, ramps to 8V over 0.1ms starting at 50ms, then holds
 Bref ref 0 V=6+2*limit((time-50m)/0.1m,0,1)
 *Error: negative error e = Vout - Vref (op-amp inverting makes it positive)
 Berr err 0 V=V(out)-V(ref)
@@ -74,14 +68,14 @@ R1 out 0 10
 .MODEL D D(IS=1e-12)
 
 *Transient Analysis (uic: skip .op, start from zero state)
-.tran 150ms uic
+.tran 100ms uic
 
 *=== Measurements ===
-*Before ref step (2~9.9ms): Vref=6V
+*Before ref step (30~49.9ms): Vref=6V
 .meas Vout_before AVG V(out) TRIG time=30ms TARG time=49.9ms
 .meas Dctrl_before AVG V(vop) TRIG time=30ms TARG time=49.9ms
 .meas Duty_before AVG V(vop)*100/12 TRIG time=30ms TARG time=49.9ms
-*Duty ramp after ref step (10ms Vref 6->8V): track dctrl over time
+*Duty ramp after ref step (50ms Vref 6->8V): track vop over time
 *Duty cycle = V(vop)/12 * 100%
 .meas Dctrl_t1 AVG V(vop) TRIG time=60ms TARG time=70ms
 .meas Duty_t1 AVG V(vop)*100/12 TRIG time=60ms TARG time=70ms
@@ -93,7 +87,7 @@ R1 out 0 10
 .meas Duty_t4 AVG V(vop)*100/12 TRIG time=90ms TARG time=100ms
 .meas Dctrl_t5 AVG V(vop) TRIG time=100ms TARG time=110ms
 .meas Duty_t5 AVG V(vop)*100/12 TRIG time=100ms TARG time=110ms
-*Step response window (50~90ms): overshoot / undershoot after Vref step
+*Step response window (50.1~90ms): overshoot / undershoot after Vref step
 .meas Vout_step_min MIN V(out) TRIG time=50.1ms TARG time=90ms
 .meas Vout_step_max MAX V(out) TRIG time=50.1ms TARG time=90ms
 *After ref step (90~150ms): Vref=8V
@@ -109,8 +103,3 @@ R1 out 0 10
 .meas IL_max_after MAX I(L1) TRIG time=90ms TARG time=150ms
 
 .end
-
-
-
-
-
